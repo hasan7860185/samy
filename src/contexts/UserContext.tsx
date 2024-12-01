@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { UserProfile } from '../types/user';
+import { UserAction } from '../services/performance/types';
 
 interface UserContextType {
   user: UserProfile | null;
@@ -9,8 +10,6 @@ interface UserContextType {
   recordAction: (action: Omit<UserAction, 'id'>) => void;
   getTopPerformers: (timeRange: 'daily' | 'weekly' | 'monthly') => UserProfile[];
 }
-
-const UserContext = createContext<UserContextType | undefined>(undefined);
 
 const defaultUsers: UserProfile[] = [
   {
@@ -50,6 +49,8 @@ const defaultUsers: UserProfile[] = [
     lastActive: '2024-03-21',
     theme: 'light',
     language: 'ar',
+    password: 'password123',
+    updatedAt: new Date().toISOString(),
     notifications: {
       email: true,
       browser: true,
@@ -73,6 +74,8 @@ const defaultUsers: UserProfile[] = [
     lastActive: '2024-03-21',
     theme: 'light',
     language: 'ar',
+    password: 'password123',
+    updatedAt: new Date().toISOString(),
     notifications: {
       email: true,
       browser: true,
@@ -86,16 +89,15 @@ const defaultUsers: UserProfile[] = [
   },
 ];
 
+const UserContext = createContext<UserContextType | undefined>(undefined);
+
 export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<UserProfile | null>(null);
   const [users, setUsers] = useState<UserProfile[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [userActions, setUserActions] = useState<UserAction[]>([]);
 
   useEffect(() => {
-    // Load users and actions from storage
     const savedUsers = localStorage.getItem('users');
-    const savedActions = localStorage.getItem('userActions');
     
     if (savedUsers) {
       setUsers(JSON.parse(savedUsers));
@@ -104,11 +106,6 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
       localStorage.setItem('users', JSON.stringify(defaultUsers));
     }
 
-    if (savedActions) {
-      setUserActions(JSON.parse(savedActions));
-    }
-
-    // Set default admin user as current user
     setUser(defaultUsers[0]);
     setIsLoading(false);
   }, []);
@@ -128,19 +125,6 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const recordAction = (action: Omit<UserAction, 'id'>) => {
-    const newAction: UserAction = {
-      ...action,
-      id: `action-${Date.now()}`,
-    };
-
-    setUserActions(prev => {
-      const updated = [...prev, newAction];
-      localStorage.setItem('userActions', JSON.stringify(updated));
-      return updated;
-    });
-
-    // Update user performance
-    const actionDate = new Date(action.timestamp);
     const now = new Date();
     
     setUsers(prevUsers => {

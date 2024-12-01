@@ -1,5 +1,5 @@
 import React from 'react';
-import { Phone, Mail } from 'lucide-react';
+import { Phone, Facebook } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 
 interface ContactOptionsProps {
@@ -13,33 +13,33 @@ const ContactOptions: React.FC<ContactOptionsProps> = ({
   phone,
   facebookId,
   onMouseEnter,
-  onMouseLeave
+  onMouseLeave,
 }) => {
-  const { t } = useLanguage();
+  const { language } = useLanguage();
 
   return (
-    <div 
-      className="absolute z-10 bg-white shadow-lg rounded-lg p-4 -right-2 top-6"
+    <div
+      className="absolute z-10 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5"
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
     >
-      <div className="flex flex-col space-y-3">
-        <a 
+      <div className="py-1">
+        <a
           href={`tel:${phone}`}
-          className="flex items-center text-gray-700 hover:text-blue-600"
+          className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
         >
-          <Phone className="w-4 h-4 mr-2" />
-          <span>{phone}</span>
+          <Phone className="w-4 h-4 mr-3" />
+          <span>{language === 'ar' ? 'اتصال' : 'Call'}</span>
         </a>
         {facebookId && (
-          <a 
+          <a
             href={`https://facebook.com/${facebookId}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center text-gray-700 hover:text-blue-600"
+            className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
           >
-            <Mail className="w-4 h-4 mr-2" />
-            <span>{facebookId}</span>
+            <Facebook className="w-4 h-4 mr-3" />
+            <span>{language === 'ar' ? 'فيسبوك' : 'Facebook'}</span>
           </a>
         )}
       </div>

@@ -124,7 +124,7 @@ const StatusCard = ({ icon: Icon, label, path, color, count }: {
 const ClientStatusCards = () => {
   const [showAll, setShowAll] = useState(false);
   const { t, dir } = useLanguage();
-  const { clients, getClientsByStatus } = useClients();
+  const { getClientsByStatus } = useClients();
   
   const displayedCards = showAll ? statusCards : statusCards.slice(0, 4);
 

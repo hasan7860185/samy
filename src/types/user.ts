@@ -2,6 +2,14 @@ export type UserRole = 'admin' | 'employee' | 'sales_manager';
 export type Theme = 'light' | 'dark';
 export type Language = 'ar' | 'en';
 
+export interface UserAction {
+  id: string;
+  userId: string;
+  type: string;
+  timestamp: string;
+  details?: Record<string, any>;
+}
+
 export interface UserProfile {
   id: string;
   username: string;
@@ -27,12 +35,4 @@ export interface UserProfile {
     lastUpdated: string;
   };
   updatedAt: string;
-}
-
-export interface UserAction {
-  id: string;
-  userId: string;
-  type: string;
-  timestamp: string;
-  details?: Record<string, any>;
 }
