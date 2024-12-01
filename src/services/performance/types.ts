@@ -12,7 +12,9 @@ export type UserActionType =
   | 'property_showing'
   | 'deal_closed'
   | 'follow_up'
-  | 'document_processing';
+  | 'document_processing'
+  | 'deal_negotiation'
+  | 'total_actions';
 
 export interface UserAction {
   id: string;

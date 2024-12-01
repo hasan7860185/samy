@@ -1,3 +1,5 @@
+import { Language } from './index';
+
 export interface Developer {
   id: string;
   name: string;
@@ -11,4 +13,6 @@ export interface Developer {
   status: 'active' | 'inactive';
   createdAt: string;
   updatedAt: string;
+  logo?: string;
+  language?: Language;
 }

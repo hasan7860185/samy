@@ -39,7 +39,7 @@ export interface Task {
   assignedToEn: string;
 }
 
-export interface User {
+export interface UserProfile {
   id: string;
   username: string;
   password: string;
@@ -48,30 +48,35 @@ export interface User {
   role: UserRole;
   phone?: string;
   department?: string;
-  createdAt: string;
-  updatedAt: string;
+  joinDate: string;
+  lastActive: string;
+  theme: Theme;
+  language: Language;
+  notifications: {
+    email: boolean;
+    browser: boolean;
+    mobile: boolean;
+  };
   avatar?: string;
-  lastLogin?: string;
+  performance?: {
+    actions: number;
+    rating: number;
+    lastUpdated: string;
+  };
+  createdAt?: string;
+  updatedAt: string;
 }
 
 export type UserRole = 'admin' | 'employee' | 'sales_manager';
 export type Theme = 'light' | 'dark';
 export type Language = 'ar' | 'en';
 
-export interface Notification {
-  id: string;
-  title: string;
-  message: string;
-  date: string;
-  read: boolean;
-}
-
 export interface Property {
   id: string;
   title: string;
   description: string;
-  type: string;
-  status: string;
+  type: PropertyType;
+  status: PropertyStatus;
   price: number;
   location: string;
   area: number;
@@ -85,6 +90,21 @@ export interface Property {
   createdAt: string;
   updatedAt: string;
 }
+
+export type PropertyType = 
+  | 'apartment'
+  | 'villa'
+  | 'land'
+  | 'commercial'
+  | 'office'
+  | 'warehouse';
+
+export type PropertyStatus =
+  | 'available'
+  | 'sold'
+  | 'rented'
+  | 'under_contract'
+  | 'maintenance';
 
 export interface Project {
   id: string;
