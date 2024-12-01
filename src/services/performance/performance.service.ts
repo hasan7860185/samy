@@ -1,136 +1,101 @@
-import { db } from '../db/instance';
-import { UserAction, UserPerformance, UserActionType } from './types';
+import { UserAction, UserPerformance, UserMetrics } from './types';
 
 export class PerformanceService {
-  static async recordAction(action: Omit<UserAction, 'id'>) {
-    try {
-      const newAction = {
-        ...action,
-        id: `action-${Date.now()}`,
-        timestamp: new Date().toISOString()
-      };
+  private static instance: PerformanceService;
+  private actions: UserAction[] = [];
 
-      await db.transaction('rw', db.userActions, db.users, async () => {
-        // Record the action
-        await db.userActions.add(newAction);
+  private constructor() {}
 
-        // Update user's performance metrics
-        const user = await db.users.get(action.userId);
-        if (user) {
-          const performance = user.performance || {
-            actions: 0,
-            rating: 0,
-            lastUpdated: new Date().toISOString()
+  static getInstance(): PerformanceService {
+    if (!PerformanceService.instance) {
+      PerformanceService.instance = new PerformanceService();
+    }
+    return PerformanceService.instance;
+  }
+
+  async getTopPerformers(timeRange: 'daily' | 'weekly' | 'monthly'): Promise<UserPerformance[]> {
+    const now = new Date();
+    const performers: UserPerformance[] = [];
+
+    // Calculate metrics for each user
+    const userMetrics = this.calculateUserMetrics(timeRange);
+
+    // Convert to performers array
+    for (const [userId, metrics] of Object.entries(userMetrics)) {
+      performers.push({
+        userId,
+        period: timeRange,
+        metrics,
+        rating: this.calculateRating(metrics),
+        startDate: this.getStartDate(timeRange).toISOString(),
+        endDate: now.toISOString()
+      });
+    }
+
+    // Sort by total actions and return top performers
+    return performers
+      .sort((a, b) => b.metrics.total_actions - a.metrics.total_actions)
+      .slice(0, 10);
+  }
+
+  private calculateUserMetrics(timeRange: 'daily' | 'weekly' | 'monthly'): Record<string, UserMetrics> {
+    const startDate = this.getStartDate(timeRange);
+    const userMetrics: Record<string, UserMetrics> = {};
+
+    this.actions
+      .filter(action => new Date(action.timestamp) >= startDate)
+      .forEach(action => {
+        if (!userMetrics[action.userId]) {
+          userMetrics[action.userId] = {
+            total_actions: 0,
+            client_contact: 0,
+            client_meeting: 0,
+            property_showing: 0,
+            deal_closed: 0,
+            follow_up: 0,
+            document_processing: 0
           };
+        }
 
-          performance.actions++;
-          performance.lastUpdated = new Date().toISOString();
-
-          // Calculate new rating based on action type
-          performance.rating = await this.calculateNewRating(action.userId);
-
-          await db.users.update(action.userId, { performance });
+        userMetrics[action.userId].total_actions++;
+        if (action.type in userMetrics[action.userId]) {
+          userMetrics[action.userId][action.type as keyof UserMetrics]++;
         }
       });
 
-      return newAction;
-    } catch (error) {
-      console.error('Error recording action:', error);
-      throw error;
-    }
+    return userMetrics;
   }
 
-  static async calculateNewRating(userId: string): Promise<number> {
-    const actions = await db.userActions
-      .where('userId')
-      .equals(userId)
-      .toArray();
+  private calculateRating(metrics: UserMetrics): number {
+    const score = 
+      metrics.deal_closed * 5 +
+      metrics.property_showing * 3 +
+      metrics.client_meeting * 2 +
+      metrics.client_contact +
+      metrics.follow_up +
+      metrics.document_processing;
 
-    // Weight different actions
-    const weights: Record<UserActionType, number> = {
-      client_contact: 1,
-      client_meeting: 2,
-      property_showing: 2,
-      deal_negotiation: 3,
-      deal_closed: 5,
-      follow_up: 1,
-      document_processing: 1
-    };
-
-    // Calculate weighted score
-    let totalScore = 0;
-    let totalWeight = 0;
-
-    actions.forEach(action => {
-      const weight = weights[action.type];
-      totalScore += weight;
-      totalWeight += 1;
-    });
-
-    // Convert to 1-5 scale
-    const rating = Math.min(5, Math.max(1, Math.round((totalScore / totalWeight) * 2)));
-    return rating;
+    if (metrics.total_actions === 0) return 0;
+    if (score >= 100) return 5;
+    if (score >= 80) return 4;
+    if (score >= 60) return 3;
+    if (score >= 40) return 2;
+    return 1;
   }
 
-  static async getTopPerformers(period: 'daily' | 'weekly' | 'monthly'): Promise<UserPerformance[]> {
-    const users = await db.users.toArray();
-    const performances = await Promise.all(
-      users.map(user => this.getUserPerformance(user.id, period))
-    );
-
-    return performances
-      .sort((a, b) => {
-        // Sort by closed deals first
-        if (b.metrics.closedDeals !== a.metrics.closedDeals) {
-          return b.metrics.closedDeals - a.metrics.closedDeals;
-        }
-        // Then by total actions
-        return b.metrics.totalActions - a.metrics.totalActions;
-      })
-      .slice(0, 5); // Top 5 performers
-  }
-
-  static async getUserPerformance(userId: string, period: 'daily' | 'weekly' | 'monthly'): Promise<UserPerformance> {
+  private getStartDate(timeRange: 'daily' | 'weekly' | 'monthly'): Date {
     const now = new Date();
-    let startDate = new Date();
-
-    switch (period) {
+    switch (timeRange) {
       case 'daily':
-        startDate.setHours(0, 0, 0, 0);
-        break;
+        return new Date(now.setHours(0, 0, 0, 0));
       case 'weekly':
-        startDate.setDate(now.getDate() - 7);
-        break;
+        now.setDate(now.getDate() - 7);
+        return now;
       case 'monthly':
-        startDate.setMonth(now.getMonth() - 1);
-        break;
+        now.setMonth(now.getMonth() - 1);
+        return now;
     }
-
-    const actions = await db.userActions
-      .where('userId')
-      .equals(userId)
-      .and(action => new Date(action.timestamp) >= startDate)
-      .toArray();
-
-    const metrics = {
-      totalActions: actions.length,
-      clientContacts: actions.filter(a => a.type === 'client_contact').length,
-      meetings: actions.filter(a => a.type === 'client_meeting').length,
-      showings: actions.filter(a => a.type === 'property_showing').length,
-      closedDeals: actions.filter(a => a.type === 'deal_closed').length,
-      followUps: actions.filter(a => a.type === 'follow_up').length,
-      documents: actions.filter(a => a.type === 'document_processing').length
-    };
-
-    const rating = await this.calculateNewRating(userId);
-
-    return {
-      userId,
-      period,
-      metrics,
-      rating,
-      startDate: startDate.toISOString(),
-      endDate: now.toISOString()
-    };
   }
 }
+
+export const performanceService = PerformanceService.getInstance();

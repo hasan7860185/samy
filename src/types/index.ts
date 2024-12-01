@@ -35,7 +35,6 @@ export interface UserProfile {
   department?: string;
   joinDate: string;
   lastActive: string;
-  lastLogin?: string;
   theme: Theme;
   language: Language;
   notifications: {
@@ -150,6 +149,7 @@ export interface Property {
   type: PropertyType;
   status: PropertyStatus;
   price: number;
+  priceCurrency: string;
   area: number;
   location: {
     city: string;
@@ -168,6 +168,12 @@ export interface Property {
     images: string[];
     videos: string[];
     virtualTour?: string;
+  };
+  owner: {
+    name: string;
+    nameEn: string;
+    phone: string;
+    email: string;
   };
   createdAt: string;
   updatedAt: string;
@@ -198,3 +204,36 @@ export type PropertyStatus =
   | 'rented'
   | 'under_contract'
   | 'maintenance';
+
+export type TranslationKey =
+  | 'light'
+  | 'dark'
+  | 'potential'
+  | 'interested'
+  | 'responded'
+  | 'reserved'
+  | 'cancelled'
+  | 'sold'
+  | 'postponed'
+  | 'resale'
+  | 'search'
+  | 'add'
+  | 'edit'
+  | 'delete'
+  | 'view'
+  | 'save'
+  | 'clientStatuses'
+  | 'showMore'
+  | 'showLess'
+  | 'new'
+  | 'not_responded'
+  | 'appointment_set'
+  | 'post_meeting'
+  | 'totalClients'
+  | 'activeProperties'
+  | 'tasks'
+  | 'properties'
+  | 'addProperty'
+  | 'editProperty'
+  | 'contactPhone'
+  | 'contactEmail';

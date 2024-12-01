@@ -15,6 +15,16 @@ export type UserActionType =
   | 'document_processing'
   | 'total_actions';
 
+export interface UserMetrics {
+  total_actions: number;
+  client_contact: number;
+  client_meeting: number;
+  property_showing: number;
+  deal_closed: number;
+  follow_up: number;
+  document_processing: number;
+}
+
 export interface UserAction {
   id: string;
   userId: string;
@@ -26,15 +36,7 @@ export interface UserAction {
 export interface UserPerformance {
   userId: string;
   period: 'daily' | 'weekly' | 'monthly';
-  metrics: {
-    total_actions: number;
-    client_contact: number;
-    client_meeting: number;
-    property_showing: number;
-    deal_closed: number;
-    follow_up: number;
-    document_processing: number;
-  };
+  metrics: UserMetrics;
   rating: number;
   startDate: string;
   endDate: string;
