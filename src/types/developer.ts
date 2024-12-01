@@ -1,13 +1,15 @@
-import { Language } from './user';
+import { Language } from './index';
 
 export interface Developer {
   id: string;
   name: string;
+  nameEn: string;
+  description: string;
+  descriptionEn: string;
   email: string;
   phone: string;
   address: string;
   website?: string;
-  description: string;
   status: 'active' | 'inactive';
   createdAt: string;
   updatedAt: string;

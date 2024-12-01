@@ -1,11 +1,70 @@
-export type Translations = {
-  [key: string]: {
-    ar: string;
-    en: string;
-  };
-};
+export type TranslationKey = keyof typeof translations;
 
-export const translations: Translations = {
+export const translations = {
+  light: {
+    ar: 'فاتح',
+    en: 'Light'
+  },
+  dark: {
+    ar: 'داكن',
+    en: 'Dark'
+  },
+  potential: {
+    ar: 'محتمل',
+    en: 'Potential'
+  },
+  interested: {
+    ar: 'مهتم',
+    en: 'Interested'
+  },
+  responded: {
+    ar: 'تم الرد',
+    en: 'Responded'
+  },
+  reserved: {
+    ar: 'محجوز',
+    en: 'Reserved'
+  },
+  cancelled: {
+    ar: 'ملغي',
+    en: 'Cancelled'
+  },
+  sold: {
+    ar: 'تم البيع',
+    en: 'Sold'
+  },
+  postponed: {
+    ar: 'مؤجل',
+    en: 'Postponed'
+  },
+  resale: {
+    ar: 'إعادة بيع',
+    en: 'Resale'
+  },
+  search: {
+    ar: 'بحث',
+    en: 'Search'
+  },
+  add: {
+    ar: 'إضافة',
+    en: 'Add'
+  },
+  edit: {
+    ar: 'تعديل',
+    en: 'Edit'
+  },
+  delete: {
+    ar: 'حذف',
+    en: 'Delete'
+  },
+  view: {
+    ar: 'عرض',
+    en: 'View'
+  },
+  save: {
+    ar: 'حفظ',
+    en: 'Save'
+  },
   clientStatuses: {
     ar: 'حالات العملاء',
     en: 'Client Statuses'
@@ -18,16 +77,8 @@ export const translations: Translations = {
     ar: 'عرض أقل',
     en: 'Show Less'
   },
-  taskStatuses: {
-    ar: 'حالات المهام',
-    en: 'Task Statuses'
-  },
-  priorityLevels: {
-    ar: 'مستويات الأولوية',
-    en: 'Priority Levels'
-  },
-  userRoles: {
-    ar: 'أدوار المستخدم',
-    en: 'User Roles'
+  joinDate: {
+    ar: 'تاريخ الانضمام',
+    en: 'Join Date'
   }
-};
+} as const;

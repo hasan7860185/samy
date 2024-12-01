@@ -6,7 +6,13 @@ export type UserActionType =
   | 'delete_client'
   | 'create_task'
   | 'complete_task'
-  | 'update_task';
+  | 'update_task'
+  | 'client_contact'
+  | 'client_meeting'
+  | 'property_showing'
+  | 'deal_closed'
+  | 'follow_up'
+  | 'document_processing';
 
 export interface UserAction {
   id: string;
@@ -19,7 +25,15 @@ export interface UserAction {
 export interface UserPerformance {
   userId: string;
   period: 'daily' | 'weekly' | 'monthly';
-  metrics: Record<UserActionType, number>;
+  metrics: {
+    totalActions: number;
+    clientContacts: number;
+    meetings: number;
+    showings: number;
+    closedDeals: number;
+    followUps: number;
+    documents: number;
+  };
   rating: number;
   startDate: string;
   endDate: string;
