@@ -1,12 +1,14 @@
 import { db } from '../db';
-import { UserProfile } from '../../types/user';
+import { User } from '../../types';
 import { AuthResponse, AuthError } from './types';
-import { validateCredentials, generateAuthToken } from './utils';
+import { generateToken } from './utils';
 
 export async function login(username: string, password: string): Promise<AuthResponse> {
   try {
     // Validate credentials
-    validateCredentials(username, password);
+    if (!username || !password) {
+      throw new Error('اسم المستخدم أو كلمة المرور غير صحيحة');
+    }
 
     // Get users from database
     const users = await db.users.toArray();
@@ -27,7 +29,7 @@ export async function login(username: string, password: string): Promise<AuthRes
     });
 
     // Generate auth token
-    const token = generateAuthToken();
+    const token = generateToken(user.id);
 
     return { user, token };
   } catch (error) {
@@ -39,7 +41,7 @@ export async function login(username: string, password: string): Promise<AuthRes
   }
 }
 
-export async function refreshUserData(userId: string): Promise<UserProfile> {
+export async function refreshUserData(userId: string): Promise<User> {
   try {
     const user = await db.users.get(userId);
     if (!user) {

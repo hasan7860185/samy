@@ -35,11 +35,11 @@ export interface Task {
   updatedAt: string;
   titleEn: string;
   descriptionEn: string;
-  assignedTo?: string;
-  assignedToEn?: string;
+  assignedTo: string;
+  assignedToEn: string;
 }
 
-export interface UserProfile {
+export interface User {
   id: string;
   username: string;
   password: string;
@@ -48,24 +48,10 @@ export interface UserProfile {
   role: UserRole;
   phone?: string;
   department?: string;
-  joinDate: string;
-  lastActive: string;
-  lastLogin?: string;
-  theme: Theme;
-  language: Language;
-  notifications: {
-    email: boolean;
-    browser: boolean;
-    mobile: boolean;
-  };
+  createdAt: string;
+  updatedAt: string;
   avatar?: string;
-  performance?: {
-    actions: number;
-    rating: number;
-    lastUpdated: string;
-  };
-  createdAt?: string;
-  updatedAt?: string;
+  lastLogin?: string;
 }
 
 export type UserRole = 'admin' | 'employee' | 'sales_manager';
@@ -78,4 +64,42 @@ export interface Notification {
   message: string;
   date: string;
   read: boolean;
+}
+
+export interface Property {
+  id: string;
+  title: string;
+  description: string;
+  type: string;
+  status: string;
+  price: number;
+  location: string;
+  area: number;
+  bedrooms?: number;
+  bathrooms?: number;
+  features: string[];
+  media: {
+    images: string[];
+    videos: string[];
+  };
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Project {
+  id: string;
+  name: string;
+  description: string;
+  developerId: string;
+  status: string;
+  location: string;
+  startDate: string;
+  endDate: string;
+  budget: number;
+  media: {
+    images: string[];
+    videos: string[];
+  };
+  createdAt: string;
+  updatedAt: string;
 }

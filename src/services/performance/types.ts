@@ -25,15 +25,7 @@ export interface UserAction {
 export interface UserPerformance {
   userId: string;
   period: 'daily' | 'weekly' | 'monthly';
-  metrics: {
-    totalActions: number;
-    clientContacts: number;
-    meetings: number;
-    showings: number;
-    closedDeals: number;
-    followUps: number;
-    documents: number;
-  };
+  metrics: Record<UserActionType, number>;
   rating: number;
   startDate: string;
   endDate: string;

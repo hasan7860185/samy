@@ -1,4 +1,11 @@
-export type TranslationKey = keyof typeof translations;
+export type TranslationKey = 
+  | 'light' | 'dark'
+  | 'potential' | 'interested' | 'responded' | 'reserved' 
+  | 'cancelled' | 'sold' | 'postponed' | 'resale'
+  | 'search' | 'add' | 'edit' | 'delete' | 'view' | 'save'
+  | 'clientStatuses' | 'showMore' | 'showLess'
+  | 'joinDate' | 'totalClients' | 'activeProperties'
+  | 'tasks' | 'properties' | 'addProperty' | 'editProperty';
 
 export const translations = {
   light: {
@@ -80,5 +87,29 @@ export const translations = {
   joinDate: {
     ar: 'تاريخ الانضمام',
     en: 'Join Date'
+  },
+  totalClients: {
+    ar: 'إجمالي العملاء',
+    en: 'Total Clients'
+  },
+  activeProperties: {
+    ar: 'العقارات النشطة',
+    en: 'Active Properties'
+  },
+  tasks: {
+    ar: 'المهام',
+    en: 'Tasks'
+  },
+  properties: {
+    ar: 'العقارات',
+    en: 'Properties'
+  },
+  addProperty: {
+    ar: 'إضافة عقار',
+    en: 'Add Property'
+  },
+  editProperty: {
+    ar: 'تعديل عقار',
+    en: 'Edit Property'
   }
 } as const;
