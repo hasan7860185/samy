@@ -1,37 +1,25 @@
-import React from 'react';
-import DashboardStats from '../components/DashboardStats';
-import ClientStatusCards from '../components/ClientStatusCards';
-import UserLeaderboard from '../components/dashboard/UserLeaderboard';
-import ActivityStats from '../components/dashboard/ActivityStats';
-import UserActivityStats from '../components/dashboard/UserActivityStats';
-import { useLanguage } from '../contexts/LanguageContext';
-
 const Dashboard = () => {
-  const { language } = useLanguage();
-
   return (
-    <div className="space-y-8">
-      <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold text-gray-900">
-          {language === 'ar' ? 'لوحة التحكم' : 'Dashboard'}
-        </h1>
-      </div>
-
-      <DashboardStats />
-      
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2">
-          <UserLeaderboard />
-          <div className="mt-8">
-            <ActivityStats />
-          </div>
+    <div>
+      <h1 className="text-3xl font-bold mb-6">لوحة التحكم</h1>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="p-6 bg-white rounded-lg shadow">
+          <h3 className="text-lg font-semibold mb-2">إجمالي العملاء</h3>
+          <p className="text-3xl font-bold">0</p>
         </div>
-        <div>
-          <UserActivityStats />
+        <div className="p-6 bg-white rounded-lg shadow">
+          <h3 className="text-lg font-semibold mb-2">العقارات النشطة</h3>
+          <p className="text-3xl font-bold">0</p>
+        </div>
+        <div className="p-6 bg-white rounded-lg shadow">
+          <h3 className="text-lg font-semibold mb-2">المشاريع الحالية</h3>
+          <p className="text-3xl font-bold">0</p>
+        </div>
+        <div className="p-6 bg-white rounded-lg shadow">
+          <h3 className="text-lg font-semibold mb-2">المهام المعلقة</h3>
+          <p className="text-3xl font-bold">0</p>
         </div>
       </div>
-
-      <ClientStatusCards />
     </div>
   );
 };
