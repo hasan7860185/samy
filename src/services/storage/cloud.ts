@@ -1,4 +1,3 @@
-```typescript
 import { db } from '../db/instance';
 import { UserProfile, Client, Property, Developer, Project, Task } from '../../types';
 
@@ -61,7 +60,7 @@ export class CloudStorage {
     const response = await fetch(`${API_URL}/sites/${SITE_ID}/functions/store-data`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify({
         userId,
@@ -108,4 +107,3 @@ export class CloudStorage {
     });
   }
 }
-```
