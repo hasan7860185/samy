@@ -83,11 +83,7 @@ const UserLeaderboard: React.FC = () => {
                 </h3>
                 <div className="text-sm text-gray-500 mt-1">
                   <span className="font-medium text-blue-600">
-                    {performer.metrics.closedDeals}
-                  </span>{' '}
-                  {language === 'ar' ? 'صفقات مغلقة' : 'closed deals'} •{' '}
-                  <span className="font-medium text-green-600">
-                    {performer.metrics.totalActions}
+                    {performer.metrics.total_actions}
                   </span>{' '}
                   {language === 'ar' ? 'إجراء' : 'actions'}
                 </div>
