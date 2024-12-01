@@ -25,6 +25,9 @@ export type TranslationKey =
   | 'properties'
   | 'addProperty'
   | 'editProperty'
+  | 'new'
+  | 'not_responded'
+  | 'appointment_set'
   | 'post_meeting';
 
 export const translations: Record<TranslationKey, { ar: string; en: string }> = {
@@ -131,6 +134,18 @@ export const translations: Record<TranslationKey, { ar: string; en: string }> = 
   editProperty: {
     ar: 'تعديل العقار',
     en: 'Edit Property'
+  },
+  new: {
+    ar: 'جديد',
+    en: 'New'
+  },
+  not_responded: {
+    ar: 'لم يتم الرد',
+    en: 'Not Responded'
+  },
+  appointment_set: {
+    ar: 'موعد محدد',
+    en: 'Appointment Set'
   },
   post_meeting: {
     ar: 'بعد الاجتماع',

@@ -32,3 +32,13 @@ export interface UserPerformance {
   startDate: string;
   endDate: string;
 }
+
+export interface UserMetrics {
+  totalActions: number;
+  clientContacts: number;
+  meetings: number;
+  showings: number;
+  closedDeals: number;
+  followUps: number;
+  documents: number;
+}
