@@ -7,7 +7,8 @@ import { Project } from '../../types/project';
 import { Property } from '../../types/property';
 import { Task } from '../../types';
 import { UserAction } from '../performance/types';
-import { getStoredUsers, storeUsers } from '../auth/storage';
+import { syncService } from '../sync/core';
+import { supabase } from '../supabase/client';
 
 class AppDatabase extends Dexie {
   users!: Dexie.Table<UserProfile, string>;
@@ -31,18 +32,29 @@ class AppDatabase extends Dexie {
       userActions: '++id, userId, type, timestamp'
     });
 
-    // Add hooks for data validation
+    // Add hooks for data synchronization
     this.users.hook('creating', async (primKey, obj) => {
-      // Hash password before storing
       if (obj.password) {
         obj.password = await bcrypt.hash(obj.password, 10);
       }
+      await syncService.syncToCloud('users', obj);
       return obj;
+    });
+
+    this.users.hook('updating', async (modifications, primKey, obj) => {
+      await syncService.syncToCloud('users', obj);
+      return modifications;
+    });
+
+    this.users.hook('deleting', async (primKey) => {
+      await syncService.syncToCloud('users', { id: primKey, deleted: true });
     });
   }
 
   async initialize() {
     try {
+      await syncService.initializeRealtime();
+      
       // Check if database exists
       const dbExists = await this.users.count();
       
@@ -53,7 +65,7 @@ class AppDatabase extends Dexie {
         const defaultAdmin: UserProfile = {
           id: '1',
           username: 'admin',
-          password: 'admin', // Will be hashed during creation
+          password: 'admin',
           email: 'admin@example.com',
           fullName: 'مدير النظام',
           role: 'admin',
@@ -71,12 +83,12 @@ class AppDatabase extends Dexie {
         };
 
         await this.users.add(defaultAdmin);
-        storeUsers([defaultAdmin]);
+        await syncService.syncToCloud('users', defaultAdmin);
         
         console.log('Default admin user created successfully');
       } else {
-        // Sync with cloud storage
-        const cloudUsers = getStoredUsers();
+        // Sync with cloud
+        const cloudUsers = await syncService.syncFromCloud('users');
         if (cloudUsers.length > 0) {
           await this.users.bulkPut(cloudUsers);
         }
@@ -91,10 +103,26 @@ class AppDatabase extends Dexie {
 
   async validateUser(username: string, password: string): Promise<UserProfile | null> {
     try {
-      const user = await this.users
+      // Try local database first
+      let user = await this.users
         .where('username')
         .equalsIgnoreCase(username)
         .first();
+
+      if (!user) {
+        // Try cloud database
+        const { data: cloudUser } = await supabase
+          .from('users')
+          .select('*')
+          .eq('username', username)
+          .single();
+
+        if (cloudUser) {
+          user = cloudUser as UserProfile;
+          // Store in local database
+          await this.users.put(user);
+        }
+      }
 
       if (!user) {
         return null;
@@ -107,52 +135,40 @@ class AppDatabase extends Dexie {
 
       // For other users, check hashed password
       const isValid = await bcrypt.compare(password, user.password);
-      if (!isValid) {
-        return null;
-      }
-
-      // Update last active timestamp
-      await this.users.update(user.id, {
-        lastActive: new Date().toISOString()
-      });
-
-      // Remove password from returned user object
-      const { password: _, ...userWithoutPassword } = user;
-      return userWithoutPassword as UserProfile;
-
+      return isValid ? user : null;
     } catch (error) {
       console.error('Error validating user:', error);
-      throw error;
+      return null;
     }
   }
 
-  async addUser(user: Omit<UserProfile, 'id'>): Promise<string> {
+  async createUser(userData: Partial<UserProfile>): Promise<UserProfile> {
     try {
-      const id = await this.users.add({
-        ...user,
-        id: `user-${Date.now()}`,
-      } as UserProfile);
+      // Generate unique ID
+      const id = crypto.randomUUID();
+      const newUser: UserProfile = {
+        ...userData,
+        id,
+        joinDate: new Date().toISOString(),
+        lastActive: new Date().toISOString(),
+        theme: 'light',
+        language: 'ar',
+        notifications: {
+          email: true,
+          browser: true,
+          mobile: true,
+        }
+      } as UserProfile;
 
-      // Update cloud storage
-      const allUsers = await this.users.toArray();
-      storeUsers(allUsers);
+      // Add to local database
+      await this.users.add(newUser);
 
-      return id.toString();
+      // Sync to cloud
+      await syncService.syncToCloud('users', newUser);
+
+      return newUser;
     } catch (error) {
-      console.error('Error adding user:', error);
-      throw error;
-    }
-  }
-
-  async updateUser(id: string, updates: Partial<UserProfile>): Promise<void> {
-    try {
-      await this.users.update(id, updates);
-      
-      // Update cloud storage
-      const allUsers = await this.users.toArray();
-      storeUsers(allUsers);
-    } catch (error) {
-      console.error('Error updating user:', error);
+      console.error('Error creating user:', error);
       throw error;
     }
   }
