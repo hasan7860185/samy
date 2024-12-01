@@ -2,7 +2,6 @@ import { db } from '../db/instance';
 import { hashPassword } from './utils';
 import { UserProfile } from '../../types/user';
 import { InitializationError } from './errors';
-import { validateUser } from './validation';
 
 export async function initializeAuth(): Promise<boolean> {
   try {
@@ -21,6 +20,7 @@ export async function initializeAuth(): Promise<boolean> {
         department: 'الإدارة',
         joinDate: new Date().toISOString(),
         lastActive: new Date().toISOString(),
+        createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
         theme: 'light',
         language: 'ar',

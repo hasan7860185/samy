@@ -21,6 +21,7 @@ export const defaultData: Partial<DBSchema> = {
     department: 'الإدارة',
     joinDate: new Date().toISOString(),
     lastActive: new Date().toISOString(),
+    createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
     theme: 'light',
     language: 'ar',

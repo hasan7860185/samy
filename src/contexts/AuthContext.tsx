@@ -35,7 +35,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
           try {
             // Sync user data from cloud
-            const userData = await DataSync.syncFromCloud('users');
+            const userData = await DataSync.syncFromCloud('users', storedUser);
             if (userData && userData.length > 0) {
               await db.users.bulkPut(userData);
             }
