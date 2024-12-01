@@ -1,17 +1,18 @@
 import jwt from 'jsonwebtoken';
-import { UserProfile } from '../../types/user';
+import bcrypt from 'bcryptjs';
 
-export const generateToken = (user: UserProfile): string => {
-  const secret = process.env.JWT_SECRET || 'default-secret-key';
-  return jwt.sign(
-    { 
-      id: user.id,
-      username: user.username,
-      role: user.role 
-    },
-    secret,
-    { expiresIn: '24h' }
-  );
+export const generateToken = (userId: string): string => {
+  return jwt.sign({ userId }, process.env.JWT_SECRET || 'default-secret', {
+    expiresIn: '24h'
+  });
 };
 
-export { generateToken as generateAuthToken };
+export const validateCredentials = (username: string, password: string): void => {
+  if (!username || !password) {
+    throw new Error('Username and password are required');
+  }
+};
+
+export const hashPassword = async (password: string): Promise<string> => {
+  return bcrypt.hash(password, 10);
+};

@@ -35,6 +35,8 @@ const ClientForm: React.FC<ClientFormProps> = ({ client, onSubmit, onCancel }) =
       facebookId: formData.get('facebookId') as string,
       status: formData.get('status') as ClientStatus,
       notes: formData.get('notes') as string,
+      createdAt: client?.createdAt || new Date().toISOString(),
+      updatedAt: new Date().toISOString()
     });
   };
 

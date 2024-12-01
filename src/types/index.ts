@@ -27,17 +27,28 @@ export type ClientStatus =
 export interface Task {
   id: string;
   title: string;
-  titleEn: string;
   description: string;
-  descriptionEn: string;
   dueDate: string;
   status: 'pending' | 'in_progress' | 'completed';
   priority: 'low' | 'medium' | 'high';
-  assignedTo: string;
-  assignedToEn: string;
   createdAt: string;
   updatedAt: string;
 }
+
+export interface User {
+  id: string;
+  username: string;
+  email: string;
+  fullName: string;
+  role: UserRole;
+  phone?: string;
+  department?: string;
+  createdAt: string;
+  updatedAt: string;
+  avatar?: string;
+}
+
+export type UserRole = 'admin' | 'employee' | 'sales_manager';
 
 export interface Notification {
   id: string;

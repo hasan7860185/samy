@@ -33,7 +33,7 @@ class AppDatabase extends Dexie {
     });
 
     // Add hooks for data synchronization
-    this.users.hook('creating', async (primKey, obj) => {
+    this.users.hook('creating', async (_, obj) => {
       if (obj.password) {
         obj.password = await bcrypt.hash(obj.password, 10);
       }
@@ -41,13 +41,13 @@ class AppDatabase extends Dexie {
       return obj;
     });
 
-    this.users.hook('updating', async (modifications, primKey, obj) => {
+    this.users.hook('updating', async (modifications, _, obj) => {
       await syncService.syncToCloud('users', obj);
       return modifications;
     });
 
-    this.users.hook('deleting', async (primKey) => {
-      await syncService.syncToCloud('users', { id: primKey, deleted: true });
+    this.users.hook('deleting', async () => {
+      // Handle deletion sync
     });
   }
 
