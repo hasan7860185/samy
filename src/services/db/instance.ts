@@ -1,156 +1,76 @@
 import Dexie from 'dexie';
-import bcrypt from 'bcryptjs';
-import { UserProfile, Client, Property } from '../../types';
-import { Task } from '../../types/task';
+import { Client, UserProfile, UserAction, Task, Property } from '../../types';
 import { Developer } from '../../types/developer';
 import { Project } from '../../types/project';
-import { UserAction } from '../../types/user';
-import { syncService } from '../sync/core';
-import { supabase } from '../supabase/client';
+import { defaultData } from './schema';
 
 class AppDatabase extends Dexie {
-  users!: Dexie.Table<UserProfile, string>;
   clients!: Dexie.Table<Client, string>;
   developers!: Dexie.Table<Developer, string>;
   projects!: Dexie.Table<Project, string>;
   properties!: Dexie.Table<Property, string>;
-  tasks!: Dexie.Table<Task, string>;
+  users!: Dexie.Table<UserProfile, string>;
   userActions!: Dexie.Table<UserAction, string>;
+  tasks!: Dexie.Table<Task, string>;
 
   constructor() {
     super('realEstateDB');
     
     this.version(1).stores({
-      users: '++id, username, role',
-      clients: '++id, status, createdAt',
-      developers: '++id, name, createdAt',
-      projects: '++id, developerId, status',
-      properties: '++id, status, type',
-      tasks: '++id, status, priority',
-      userActions: '++id, userId, type, timestamp'
-    });
-
-    // Add hooks for data synchronization
-    this.users.hook('creating', async (_, obj) => {
-      if (obj.password) {
-        obj.password = await bcrypt.hash(obj.password, 10);
-      }
-      await syncService.syncToCloud('users', obj);
-      return obj;
-    });
-
-    this.users.hook('updating', async (modifications, _, obj) => {
-      await syncService.syncToCloud('users', obj);
-      return modifications;
-    });
-
-    this.users.hook('deleting', async () => {
-      // Handle deletion sync
+      clients: '++id, status, facebookId, createdAt',
+      developers: '++id, name, nameEn, createdAt',
+      projects: '++id, developerId, status, createdAt',
+      properties: '++id, status, type, createdAt',
+      users: '++id, username, role, createdAt',
+      userActions: '++id, userId, type, timestamp',
+      tasks: '++id, status, priority, dueDate, createdAt',
     });
   }
 
   async initialize() {
     try {
-      // Open the database first
-      await this.open();
+      const dbExists = await Dexie.exists('realEstateDB');
       
-      // Check if we have a connection to Supabase
-      const { data, error } = await supabase.auth.getSession();
-      if (error) {
-        console.warn('Supabase connection error:', error);
-        // Continue without Supabase - will work in offline mode
-      }
+      if (!dbExists) {
+        console.log('Initializing new database...');
+        
+        // Create default admin user with updatedAt field
+        const defaultAdmin: UserProfile = {
+          id: '1',
+          username: 'admin',
+          password: 'admin123',
+          email: 'admin@example.com',
+          fullName: 'مدير النظام',
+          role: 'admin',
+          phone: '0501234567',
+          department: 'الإدارة',
+          joinDate: new Date().toISOString(),
+          lastActive: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+          theme: 'light',
+          language: 'ar',
+          notifications: {
+            email: true,
+            browser: true,
+            mobile: true,
+          },
+          performance: {
+            actions: 0,
+            rating: 5,
+            lastUpdated: new Date().toISOString(),
+          },
+        };
 
-      // Initialize sync service
-      try {
-        await syncService.initialize();
-      } catch (syncError) {
-        console.warn('Sync service initialization error:', syncError);
-        // Continue without sync - will work in offline mode
+        await this.users.add(defaultAdmin);
+        console.log('Database initialized with default admin user');
       }
 
       return true;
     } catch (error) {
-      console.error('Database initialization error:', error);
-      throw error;
-    }
-  }
-
-  async validateUser(username: string, password: string): Promise<UserProfile | null> {
-    try {
-      // Try local database first
-      let user = await this.users
-        .where('username')
-        .equalsIgnoreCase(username)
-        .first();
-
-      if (!user) {
-        // Try cloud database
-        const { data: cloudUser } = await supabase
-          .from('users')
-          .select('*')
-          .eq('username', username)
-          .single();
-
-        if (cloudUser) {
-          user = cloudUser as UserProfile;
-          // Store in local database
-          await this.users.put(user);
-        }
-      }
-
-      if (!user) {
-        return null;
-      }
-
-      // For the default admin user
-      if (username === 'admin' && password === 'admin') {
-        return user;
-      }
-
-      // For other users, check hashed password
-      const isValid = await bcrypt.compare(password, user.password);
-      return isValid ? user : null;
-    } catch (error) {
-      console.error('Error validating user:', error);
-      return null;
-    }
-  }
-
-  async createUser(userData: Partial<UserProfile>): Promise<UserProfile> {
-    try {
-      // Generate unique ID
-      const id = crypto.randomUUID();
-      const newUser: UserProfile = {
-        ...userData,
-        id,
-        joinDate: new Date().toISOString(),
-        lastActive: new Date().toISOString(),
-        theme: 'light',
-        language: 'ar',
-        notifications: {
-          email: true,
-          browser: true,
-          mobile: true,
-        }
-      } as UserProfile;
-
-      // Add to local database
-      await this.users.add(newUser);
-
-      // Sync to cloud
-      await syncService.syncToCloud('users', newUser);
-
-      return newUser;
-    } catch (error) {
-      console.error('Error creating user:', error);
+      console.error('Failed to initialize database:', error);
       throw error;
     }
   }
 }
 
 export const db = new AppDatabase();
-
-export const initializeDatabase = async () => {
-  return await db.initialize();
-};

@@ -5,6 +5,32 @@ export * from './task';
 export * from './developer';
 export * from './project';
 
+export interface User {
+  id: string;
+  username: string;
+  email: string;
+  role: string;
+  password: string;
+  phone?: string;
+  department?: string;
+  joinDate: string;
+  lastActive: string;
+  theme: 'light' | 'dark';
+  language: 'ar' | 'en';
+  notifications: {
+    email: boolean;
+    browser: boolean;
+    mobile: boolean;
+  };
+  avatar?: string;
+  performance?: {
+    actions: number;
+    rating: number;
+    lastUpdated: string;
+  };
+  updatedAt: string;
+}
+
 export type TranslationKey =
   | 'light'
   | 'dark'
@@ -37,6 +63,8 @@ export type TranslationKey =
   | 'addProperty'
   | 'editProperty'
   | 'contactPhone'
-  | 'contactEmail';
+  | 'contactEmail'
+  | 'ar'
+  | 'en';
 
 export type Language = 'ar' | 'en';
