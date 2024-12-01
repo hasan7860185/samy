@@ -2,7 +2,6 @@ import Dexie from 'dexie';
 import { Client, UserProfile, UserAction, Task, Property } from '../../types';
 import { Developer } from '../../types/developer';
 import { Project } from '../../types/project';
-import { defaultData } from './schema';
 
 class AppDatabase extends Dexie {
   clients!: Dexie.Table<Client, string>;

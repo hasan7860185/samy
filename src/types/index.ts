@@ -9,12 +9,15 @@ export interface User {
   id: string;
   username: string;
   email: string;
-  role: string;
+  role: 'admin' | 'employee' | 'sales_manager';
   password: string;
+  fullName: string;
   phone?: string;
   department?: string;
   joinDate: string;
   lastActive: string;
+  lastLogin?: string;
+  createdAt: string;
   theme: 'light' | 'dark';
   language: 'ar' | 'en';
   notifications: {
@@ -68,3 +71,14 @@ export type TranslationKey =
   | 'en';
 
 export type Language = 'ar' | 'en';
+
+export interface UserMetrics {
+  total_actions: number;
+  client_contact: number;
+  client_meeting: number;
+  property_showing: number;
+  deal_closed: number;
+  closedDeals: number;
+  follow_up: number;
+  document_processing: number;
+}
