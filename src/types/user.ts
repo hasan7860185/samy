@@ -28,3 +28,11 @@ export interface UserProfile {
   };
   updatedAt: string;
 }
+
+export interface UserAction {
+  id: string;
+  userId: string;
+  type: string;
+  timestamp: string;
+  details?: Record<string, any>;
+}

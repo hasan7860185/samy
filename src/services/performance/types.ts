@@ -21,6 +21,7 @@ export interface UserMetrics {
   client_meeting: number;
   property_showing: number;
   deal_closed: number;
+  closedDeals: number;
   follow_up: number;
   document_processing: number;
 }

@@ -1,6 +1,7 @@
 export * from './user';
 export * from './client';
 export * from './property';
+export * from './task';
 
 export type TranslationKey =
   | 'light'

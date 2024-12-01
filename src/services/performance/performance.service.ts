@@ -13,12 +13,13 @@ export class PerformanceService {
     return PerformanceService.instance;
   }
 
-  async getTopPerformers(timeRange: 'daily' | 'weekly' | 'monthly'): Promise<UserPerformance[]> {
+  static async getTopPerformers(timeRange: 'daily' | 'weekly' | 'monthly'): Promise<UserPerformance[]> {
+    const instance = PerformanceService.getInstance();
     const now = new Date();
     const performers: UserPerformance[] = [];
 
     // Calculate metrics for each user
-    const userMetrics = this.calculateUserMetrics(timeRange);
+    const userMetrics = instance.calculateUserMetrics(timeRange);
 
     // Convert to performers array
     for (const [userId, metrics] of Object.entries(userMetrics)) {
@@ -26,8 +27,8 @@ export class PerformanceService {
         userId,
         period: timeRange,
         metrics,
-        rating: this.calculateRating(metrics),
-        startDate: this.getStartDate(timeRange).toISOString(),
+        rating: instance.calculateRating(metrics),
+        startDate: instance.getStartDate(timeRange).toISOString(),
         endDate: now.toISOString()
       });
     }
