@@ -1,3 +1,4 @@
+import { ReactElement } from 'react';
 import Dashboard from './pages/Dashboard';
 import Clients from './pages/Clients';
 import ClientStatus from './pages/ClientStatus';
@@ -8,7 +9,12 @@ import Projects from './pages/Projects';
 import Login from './pages/Login';
 import Help from './pages/Help';
 
-export const navItems = [
+interface NavItem {
+  to: string;
+  page: ReactElement;
+}
+
+export const navItems: NavItem[] = [
   { to: '/', page: <Dashboard /> },
   { to: '/clients', page: <Clients /> },
   { to: '/client-status', page: <ClientStatus /> },
