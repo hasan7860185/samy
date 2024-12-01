@@ -20,12 +20,11 @@ export default defineConfig(({ mode }) => {
         }
       }
     },
-    define: {
-      'process.env.VITE_SUPABASE_URL': JSON.stringify(env.VITE_SUPABASE_URL),
-      'process.env.VITE_SUPABASE_ANON_KEY': JSON.stringify(env.VITE_SUPABASE_ANON_KEY)
-    },
     optimizeDeps: {
-      include: ['bcryptjs']
+      include: ['@supabase/supabase-js', 'bcryptjs']
+    },
+    define: {
+      'process.env': {}
     }
   };
 });

@@ -53,50 +53,27 @@ class AppDatabase extends Dexie {
 
   async initialize() {
     try {
-      await syncService.initializeRealtime();
+      // Open the database first
+      await this.open();
       
-      // Check if database exists
-      const dbExists = await this.users.count();
-      
-      if (dbExists === 0) {
-        console.log('Creating new database...');
-        
-        // Create default admin user
-        const defaultAdmin: UserProfile = {
-          id: '1',
-          username: 'admin',
-          password: 'admin',
-          email: 'admin@example.com',
-          fullName: 'مدير النظام',
-          role: 'admin',
-          phone: '0501234567',
-          department: 'الإدارة',
-          joinDate: new Date().toISOString(),
-          lastActive: new Date().toISOString(),
-          theme: 'light',
-          language: 'ar',
-          notifications: {
-            email: true,
-            browser: true,
-            mobile: true,
-          }
-        };
+      // Check if we have a connection to Supabase
+      const { data, error } = await supabase.auth.getSession();
+      if (error) {
+        console.warn('Supabase connection error:', error);
+        // Continue without Supabase - will work in offline mode
+      }
 
-        await this.users.add(defaultAdmin);
-        await syncService.syncToCloud('users', defaultAdmin);
-        
-        console.log('Default admin user created successfully');
-      } else {
-        // Sync with cloud
-        const cloudUsers = await syncService.syncFromCloud('users');
-        if (cloudUsers.length > 0) {
-          await this.users.bulkPut(cloudUsers);
-        }
+      // Initialize sync service
+      try {
+        await syncService.initialize();
+      } catch (syncError) {
+        console.warn('Sync service initialization error:', syncError);
+        // Continue without sync - will work in offline mode
       }
 
       return true;
     } catch (error) {
-      console.error('Failed to initialize database:', error);
+      console.error('Database initialization error:', error);
       throw error;
     }
   }
