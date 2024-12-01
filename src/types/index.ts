@@ -24,21 +24,6 @@ export type ClientStatus =
   | 'postponed'
   | 'resale';
 
-export interface Task {
-  id: string;
-  title: string;
-  description: string;
-  dueDate: string;
-  status: 'pending' | 'in_progress' | 'completed';
-  priority: 'low' | 'medium' | 'high';
-  createdAt: string;
-  updatedAt: string;
-  titleEn: string;
-  descriptionEn: string;
-  assignedTo: string;
-  assignedToEn: string;
-}
-
 export interface UserProfile {
   id: string;
   username: string;
@@ -70,56 +55,3 @@ export interface UserProfile {
 export type UserRole = 'admin' | 'employee' | 'sales_manager';
 export type Theme = 'light' | 'dark';
 export type Language = 'ar' | 'en';
-
-export interface Property {
-  id: string;
-  title: string;
-  description: string;
-  type: PropertyType;
-  status: PropertyStatus;
-  price: number;
-  location: string;
-  area: number;
-  bedrooms?: number;
-  bathrooms?: number;
-  features: string[];
-  media: {
-    images: string[];
-    videos: string[];
-  };
-  createdAt: string;
-  updatedAt: string;
-}
-
-export type PropertyType = 
-  | 'apartment'
-  | 'villa'
-  | 'land'
-  | 'commercial'
-  | 'office'
-  | 'warehouse';
-
-export type PropertyStatus =
-  | 'available'
-  | 'sold'
-  | 'rented'
-  | 'under_contract'
-  | 'maintenance';
-
-export interface Project {
-  id: string;
-  name: string;
-  description: string;
-  developerId: string;
-  status: string;
-  location: string;
-  startDate: string;
-  endDate: string;
-  budget: number;
-  media: {
-    images: string[];
-    videos: string[];
-  };
-  createdAt: string;
-  updatedAt: string;
-}

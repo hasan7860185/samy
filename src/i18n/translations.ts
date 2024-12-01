@@ -1,14 +1,33 @@
-export type TranslationKey = 
-  | 'light' | 'dark'
-  | 'potential' | 'interested' | 'responded' | 'reserved' 
-  | 'cancelled' | 'sold' | 'postponed' | 'resale'
-  | 'search' | 'add' | 'edit' | 'delete' | 'view' | 'save'
-  | 'clientStatuses' | 'showMore' | 'showLess'
-  | 'joinDate' | 'totalClients' | 'activeProperties'
-  | 'tasks' | 'properties' | 'addProperty' | 'editProperty'
-  | 'new' | 'not_responded' | 'appointment_set' | 'post_meeting';
+export type TranslationKey =
+  | 'light'
+  | 'dark'
+  | 'potential'
+  | 'interested'
+  | 'responded'
+  | 'reserved'
+  | 'cancelled'
+  | 'sold'
+  | 'postponed'
+  | 'resale'
+  | 'search'
+  | 'add'
+  | 'edit'
+  | 'delete'
+  | 'view'
+  | 'save'
+  | 'clientStatuses'
+  | 'showMore'
+  | 'showLess'
+  | 'joinDate'
+  | 'totalClients'
+  | 'activeProperties'
+  | 'tasks'
+  | 'properties'
+  | 'addProperty'
+  | 'editProperty'
+  | 'post_meeting';
 
-export const translations = {
+export const translations: Record<TranslationKey, { ar: string; en: string }> = {
   light: {
     ar: 'فاتح',
     en: 'Light'
@@ -26,7 +45,7 @@ export const translations = {
     en: 'Interested'
   },
   responded: {
-    ar: 'تم الرد',
+    ar: 'رد',
     en: 'Responded'
   },
   reserved: {
@@ -34,11 +53,11 @@ export const translations = {
     en: 'Reserved'
   },
   cancelled: {
-    ar: 'ملغي',
+    ar: 'ملغى',
     en: 'Cancelled'
   },
   sold: {
-    ar: 'تم البيع',
+    ar: 'مباع',
     en: 'Sold'
   },
   postponed: {
@@ -110,23 +129,11 @@ export const translations = {
     en: 'Add Property'
   },
   editProperty: {
-    ar: 'تعديل عقار',
+    ar: 'تعديل العقار',
     en: 'Edit Property'
-  },
-  new: {
-    ar: 'جديد',
-    en: 'New'
-  },
-  not_responded: {
-    ar: 'لم يتم الرد',
-    en: 'Not Responded'
-  },
-  appointment_set: {
-    ar: 'موعد محدد',
-    en: 'Appointment Set'
   },
   post_meeting: {
     ar: 'بعد الاجتماع',
     en: 'Post Meeting'
   }
-} as const;
+};
