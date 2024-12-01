@@ -13,7 +13,6 @@ export type UserActionType =
   | 'deal_closed'
   | 'follow_up'
   | 'document_processing'
-  | 'deal_negotiation'
   | 'total_actions';
 
 export interface UserAction {
@@ -34,11 +33,11 @@ export interface UserPerformance {
 }
 
 export interface UserMetrics {
-  totalActions: number;
-  clientContacts: number;
+  total_actions: number;
+  client_contacts: number;
   meetings: number;
   showings: number;
-  closedDeals: number;
-  followUps: number;
+  deal_closed: number;
+  follow_ups: number;
   documents: number;
 }

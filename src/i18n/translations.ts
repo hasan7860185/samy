@@ -18,13 +18,6 @@ export type TranslationKey =
   | 'clientStatuses'
   | 'showMore'
   | 'showLess'
-  | 'joinDate'
-  | 'totalClients'
-  | 'activeProperties'
-  | 'tasks'
-  | 'properties'
-  | 'addProperty'
-  | 'editProperty'
   | 'new'
   | 'not_responded'
   | 'appointment_set'
@@ -106,34 +99,6 @@ export const translations: Record<TranslationKey, { ar: string; en: string }> = 
   showLess: {
     ar: 'عرض أقل',
     en: 'Show Less'
-  },
-  joinDate: {
-    ar: 'تاريخ الانضمام',
-    en: 'Join Date'
-  },
-  totalClients: {
-    ar: 'إجمالي العملاء',
-    en: 'Total Clients'
-  },
-  activeProperties: {
-    ar: 'العقارات النشطة',
-    en: 'Active Properties'
-  },
-  tasks: {
-    ar: 'المهام',
-    en: 'Tasks'
-  },
-  properties: {
-    ar: 'العقارات',
-    en: 'Properties'
-  },
-  addProperty: {
-    ar: 'إضافة عقار',
-    en: 'Add Property'
-  },
-  editProperty: {
-    ar: 'تعديل العقار',
-    en: 'Edit Property'
   },
   new: {
     ar: 'جديد',
