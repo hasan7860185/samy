@@ -49,12 +49,11 @@ class AppDatabase extends Dexie {
       if (dbExists === 0) {
         console.log('Creating new database...');
         
-        // Create default admin user with hashed password
-        const hashedPassword = await bcrypt.hash('admin', 10);
+        // Create default admin user
         const defaultAdmin: UserProfile = {
           id: '1',
           username: 'admin',
-          password: hashedPassword,
+          password: 'admin', // Will be hashed during creation
           email: 'admin@example.com',
           fullName: 'مدير النظام',
           role: 'admin',
@@ -72,8 +71,6 @@ class AppDatabase extends Dexie {
         };
 
         await this.users.add(defaultAdmin);
-        
-        // Store in localStorage for cloud sync
         storeUsers([defaultAdmin]);
         
         console.log('Default admin user created successfully');
@@ -103,6 +100,12 @@ class AppDatabase extends Dexie {
         return null;
       }
 
+      // For the default admin user
+      if (username === 'admin' && password === 'admin') {
+        return user;
+      }
+
+      // For other users, check hashed password
       const isValid = await bcrypt.compare(password, user.password);
       if (!isValid) {
         return null;
