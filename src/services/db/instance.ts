@@ -1,9 +1,10 @@
 import Dexie from 'dexie';
 import bcrypt from 'bcryptjs';
-import { UserProfile, Client, Property, Task } from '../../types';
-import { UserAction } from '../../types/user';
+import { UserProfile, Client, Property } from '../../types';
+import { Task } from '../../types/task';
 import { Developer } from '../../types/developer';
 import { Project } from '../../types/project';
+import { UserAction } from '../../types/user';
 import { syncService } from '../sync/core';
 import { supabase } from '../supabase/client';
 
@@ -149,3 +150,7 @@ class AppDatabase extends Dexie {
 }
 
 export const db = new AppDatabase();
+
+export const initializeDatabase = async () => {
+  return await db.initialize();
+};

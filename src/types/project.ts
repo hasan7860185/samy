@@ -15,8 +15,8 @@ export interface Project {
       lng: number;
     }
   };
-  type: ProjectType;
-  status: ProjectStatus;
+  type: 'residential' | 'commercial' | 'mixed_use' | 'industrial';
+  status: 'planned' | 'under_construction' | 'completed' | 'sold_out';
   startDate: string;
   completionDate: string;
   totalUnits: number;
@@ -29,21 +29,9 @@ export interface Project {
   featuresEn: string[];
   media: {
     images: string[];
-    videos?: string[];
+    videos: string[];
     brochure?: string;
   };
   createdAt: string;
   updatedAt: string;
 }
-
-export type ProjectType = 
-  | 'residential'
-  | 'commercial'
-  | 'mixed_use'
-  | 'industrial';
-
-export type ProjectStatus = 
-  | 'planned'
-  | 'under_construction'
-  | 'completed'
-  | 'sold_out';

@@ -1,5 +1,3 @@
-import { Language } from './index';
-
 export interface Developer {
   id: string;
   name: string;
@@ -14,5 +12,4 @@ export interface Developer {
   createdAt: string;
   updatedAt: string;
   logo?: string;
-  language?: Language;
 }

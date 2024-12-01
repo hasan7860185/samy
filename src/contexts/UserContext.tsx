@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { UserProfile, UserAction } from '../types/user';
+import { UserProfile } from '../types/user';
 
 interface UserContextType {
   user: UserProfile | null;
@@ -25,6 +25,8 @@ const defaultUsers: UserProfile[] = [
     lastActive: '2024-03-21',
     theme: 'light',
     language: 'ar',
+    password: 'admin123',
+    updatedAt: new Date().toISOString(),
     notifications: {
       email: true,
       browser: true,

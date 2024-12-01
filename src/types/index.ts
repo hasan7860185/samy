@@ -2,6 +2,8 @@ export * from './user';
 export * from './client';
 export * from './property';
 export * from './task';
+export * from './developer';
+export * from './project';
 
 export type TranslationKey =
   | 'light'
@@ -20,6 +22,7 @@ export type TranslationKey =
   | 'delete'
   | 'view'
   | 'save'
+  | 'cancel'
   | 'clientStatuses'
   | 'showMore'
   | 'showLess'
@@ -35,3 +38,5 @@ export type TranslationKey =
   | 'editProperty'
   | 'contactPhone'
   | 'contactEmail';
+
+export type Language = 'ar' | 'en';
