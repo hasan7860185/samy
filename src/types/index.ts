@@ -33,6 +33,10 @@ export interface Task {
   priority: 'low' | 'medium' | 'high';
   createdAt: string;
   updatedAt: string;
+  titleEn?: string;
+  descriptionEn?: string;
+  assignedTo?: string;
+  assignedToEn?: string;
 }
 
 export interface User {
@@ -46,6 +50,7 @@ export interface User {
   createdAt: string;
   updatedAt: string;
   avatar?: string;
+  password: string;
 }
 
 export type UserRole = 'admin' | 'employee' | 'sales_manager';
