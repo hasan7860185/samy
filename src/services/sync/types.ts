@@ -14,8 +14,21 @@ export interface SyncResponse {
   };
 }
 
-export interface SyncResult {
+export interface SyncResult<T = any> {
   success: boolean;
+  data?: T;
   error?: Error;
-  data?: any;
+}
+
+export interface SyncOptions {
+  force?: boolean;
+  retry?: boolean;
+  timeout?: number;
+}
+
+export interface SyncProgress {
+  total: number;
+  current: number;
+  status: 'pending' | 'syncing' | 'completed' | 'failed';
+  message?: string;
 }

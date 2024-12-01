@@ -4,7 +4,7 @@ import { db } from '../services/db/instance';
 import { DataSync } from '../services/sync';
 import { UserProfile } from '../types/user';
 import { initializeAuth } from '../services/auth/initialize';
-import { storeAuthData, clearAuthData, getStoredUser, generateToken } from '../services/auth/storage';
+import { storeAuthData, clearAuthData, getStoredUser } from '../services/auth/storage';
 import { AuthError } from '../services/auth/errors';
 
 interface AuthContextType {
@@ -34,12 +34,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           setIsAuthenticated(true);
 
           try {
-            const result = await DataSync.syncFromCloud(storedUser.id);
-            if (!result.success && result.error) {
-              console.warn('Initial sync failed:', result.error.message);
+            // Sync user data from cloud
+            const userData = await DataSync.syncFromCloud('users');
+            if (userData && userData.length > 0) {
+              await db.users.bulkPut(userData);
             }
           } catch (error) {
-            console.warn('Error during initial sync:', error);
+            console.warn('Initial sync failed:', error);
           }
         }
       } catch (error) {
@@ -60,19 +61,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         throw new AuthError('اسم المستخدم أو كلمة المرور غير صحيحة');
       }
 
-      const token = generateToken();
-      storeAuthData(validatedUser, token);
-
+      storeAuthData(validatedUser);
       setUser(validatedUser);
       setIsAuthenticated(true);
 
       try {
-        const result = await DataSync.syncFromCloud(validatedUser.id);
-        if (!result.success && result.error) {
-          console.warn('Login sync failed:', result.error.message);
+        // Sync user data after login
+        const userData = await DataSync.syncFromCloud('users');
+        if (userData && userData.length > 0) {
+          await db.users.bulkPut(userData);
         }
       } catch (error) {
-        console.warn('Error during login sync:', error);
+        console.warn('Login sync failed:', error);
       }
 
       navigate('/');
@@ -87,12 +87,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       if (user) {
         try {
-          const result = await DataSync.syncToCloud(user.id);
-          if (!result.success && result.error) {
-            console.warn('Logout sync failed:', result.error.message);
-          }
+          // Sync any pending changes before logout
+          await DataSync.syncToCloud('users', user);
         } catch (error) {
-          console.warn('Error during logout sync:', error);
+          console.warn('Logout sync failed:', error);
         }
       }
     } finally {
@@ -104,15 +102,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   return (
-    <AuthContext.Provider
-      value={{
-        user,
-        login,
-        logout,
-        isAuthenticated,
-        isLoading,
-      }}
-    >
+    <AuthContext.Provider value={{ user, login, logout, isAuthenticated, isLoading }}>
       {children}
     </AuthContext.Provider>
   );
