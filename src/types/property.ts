@@ -22,6 +22,7 @@ export interface Property {
   type: PropertyType;
   status: PropertyStatus;
   price: number;
+  priceCurrency: string;
   area: number;
   location: {
     city: string;
@@ -47,7 +48,7 @@ export interface Property {
   };
   media: {
     images: string[];
-    videos?: string[];
+    videos: string[];
     virtualTour?: string;
   };
   owner: {
