@@ -18,10 +18,8 @@ export class PerformanceService {
     const now = new Date();
     const performers: UserPerformance[] = [];
 
-    // Calculate metrics for each user
     const userMetrics = instance.calculateUserMetrics(timeRange);
 
-    // Convert to performers array
     for (const [userId, metrics] of Object.entries(userMetrics)) {
       performers.push({
         userId,
@@ -33,7 +31,6 @@ export class PerformanceService {
       });
     }
 
-    // Sort by total actions and return top performers
     return performers
       .sort((a, b) => b.metrics.total_actions - a.metrics.total_actions)
       .slice(0, 10);
@@ -53,6 +50,7 @@ export class PerformanceService {
             client_meeting: 0,
             property_showing: 0,
             deal_closed: 0,
+            closedDeals: 0,
             follow_up: 0,
             document_processing: 0
           };

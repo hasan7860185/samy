@@ -13,7 +13,7 @@ export const defaultData: Partial<DBSchema> = {
   users: [{
     id: '1',
     username: 'admin',
-    password: 'admin123', // In production, use hashed passwords
+    password: 'admin123',
     email: 'admin@example.com',
     fullName: 'مدير النظام',
     role: 'admin',
@@ -21,6 +21,7 @@ export const defaultData: Partial<DBSchema> = {
     department: 'الإدارة',
     joinDate: new Date().toISOString(),
     lastActive: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
     theme: 'light',
     language: 'ar',
     notifications: {

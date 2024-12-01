@@ -1,2 +1,2 @@
-export { db, initializeDatabase } from './instance';
+export { db } from './instance';
 export * from './schema';
