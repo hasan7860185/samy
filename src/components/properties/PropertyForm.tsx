@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Property, PropertyType, PropertyStatus } from '../../types/property';
-import { Upload, X } from 'lucide-react';
+import { Upload, X, Camera } from 'lucide-react';
 import { useLanguage } from '../../contexts/LanguageContext';
 
 interface PropertyFormProps {
@@ -44,6 +44,8 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
     },
     media: {
       images: property?.media.images || [],
+      videos: property?.media.videos || [],
+      virtualTour: property?.media.virtualTour,
     },
     owner: {
       name: property?.owner.name || '',
@@ -53,11 +55,14 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
     },
   });
 
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
-  ) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    onSubmit(formData as Partial<Property>);
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
-    
+
     if (name.includes('.')) {
       const [section, field] = name.split('.');
       setFormData(prev => ({
@@ -75,16 +80,6 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
     }
   };
 
-  const handleCheckboxChange = (name: string) => {
-    setFormData(prev => ({
-      ...prev,
-      features: {
-        ...prev.features,
-        [name]: !prev.features[name as keyof typeof prev.features],
-      },
-    }));
-  };
-
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (files) {
@@ -97,11 +92,6 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
         },
       }));
     }
-  };
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    onSubmit(formData);
   };
 
   return (
@@ -287,7 +277,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
               <input
                 type="checkbox"
                 checked={formData.features.hasPool}
-                onChange={() => handleCheckboxChange('hasPool')}
+                onChange={() => handleInputChange({target: {name: 'features.hasPool', value: !formData.features.hasPool}} as any)}
                 className="rounded text-blue-600 focus:ring-blue-500"
               />
               <span className="text-sm text-gray-700">
@@ -298,7 +288,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
               <input
                 type="checkbox"
                 checked={formData.features.hasGarden}
-                onChange={() => handleCheckboxChange('hasGarden')}
+                onChange={() => handleInputChange({target: {name: 'features.hasGarden', value: !formData.features.hasGarden}} as any)}
                 className="rounded text-blue-600 focus:ring-blue-500"
               />
               <span className="text-sm text-gray-700">
@@ -309,7 +299,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
               <input
                 type="checkbox"
                 checked={formData.features.hasElevator}
-                onChange={() => handleCheckboxChange('hasElevator')}
+                onChange={() => handleInputChange({target: {name: 'features.hasElevator', value: !formData.features.hasElevator}} as any)}
                 className="rounded text-blue-600 focus:ring-blue-500"
               />
               <span className="text-sm text-gray-700">
@@ -320,7 +310,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
               <input
                 type="checkbox"
                 checked={formData.features.isFurnished}
-                onChange={() => handleCheckboxChange('isFurnished')}
+                onChange={() => handleInputChange({target: {name: 'features.isFurnished', value: !formData.features.isFurnished}} as any)}
                 className="rounded text-blue-600 focus:ring-blue-500"
               />
               <span className="text-sm text-gray-700">

@@ -131,7 +131,9 @@ const ClientStatusCards = () => {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h2 className="text-xl font-semibold text-gray-800">{t('clientStatuses')}</h2>
+        <h2 className="text-xl font-semibold text-gray-800">
+          {t('clientStatuses' as const)}
+        </h2>
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -139,7 +141,7 @@ const ClientStatusCards = () => {
           <StatusCard
             key={card.statusKey}
             icon={card.icon}
-            label={t(card.statusKey)}
+            label={t(card.statusKey as const)}
             path={card.path}
             color={card.color}
             count={getClientsByStatus(card.statusKey).length}
@@ -158,12 +160,12 @@ const ClientStatusCards = () => {
             {showAll ? (
               <>
                 <ChevronUp className="w-4 h-4" />
-                {t('showLess')}
+                {t('showLess' as const)}
               </>
             ) : (
               <>
                 <ChevronDown className="w-4 h-4" />
-                {t('showMore')}
+                {t('showMore' as const)}
               </>
             )}
           </button>

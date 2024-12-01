@@ -21,6 +21,8 @@ export interface UserProfile {
   department?: string;
   joinDate: string;
   lastActive: string;
+  createdAt: string;
+  updatedAt: string;
   theme: Theme;
   language: Language;
   notifications: {
@@ -34,5 +36,4 @@ export interface UserProfile {
     rating: number;
     lastUpdated: string;
   };
-  updatedAt: string;
 }

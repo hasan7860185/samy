@@ -1,11 +1,5 @@
-```typescript
 import Dexie from 'dexie';
-import { Client } from '../types';
-import { Developer } from '../types/developer';
-import { Project } from '../types/project';
-import { Property } from '../types/property';
-import { UserProfile, UserAction } from '../types/user';
-import { Task } from '../types';
+import { Client, Developer, Project, Property, UserProfile, UserAction, Task } from '../types';
 
 class AppDatabase extends Dexie {
   clients!: Dexie.Table<Client, string>;
@@ -32,17 +26,15 @@ class AppDatabase extends Dexie {
 
   async initialize() {
     try {
-      // Check if database exists
       const dbExists = await Dexie.exists('realEstateDB');
       
       if (!dbExists) {
         console.log('Initializing new database...');
         
-        // Create default admin user
         const defaultAdmin: UserProfile = {
           id: '1',
           username: 'admin',
-          password: 'admin123', // In production, use hashed passwords
+          password: 'admin123',
           email: 'admin@example.com',
           fullName: 'مدير النظام',
           role: 'admin',
@@ -50,12 +42,19 @@ class AppDatabase extends Dexie {
           department: 'الإدارة',
           joinDate: new Date().toISOString(),
           lastActive: new Date().toISOString(),
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
           theme: 'light',
           language: 'ar',
           notifications: {
             email: true,
             browser: true,
             mobile: true,
+          },
+          performance: {
+            actions: 0,
+            rating: 5,
+            lastUpdated: new Date().toISOString(),
           },
         };
 
@@ -72,4 +71,3 @@ class AppDatabase extends Dexie {
 }
 
 export const db = new AppDatabase();
-```
