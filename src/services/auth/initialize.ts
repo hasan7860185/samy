@@ -21,6 +21,7 @@ export async function initializeAuth(): Promise<boolean> {
         department: 'الإدارة',
         joinDate: new Date().toISOString(),
         lastActive: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
         theme: 'light',
         language: 'ar',
         notifications: {
@@ -30,7 +31,6 @@ export async function initializeAuth(): Promise<boolean> {
         }
       };
 
-      validateUser(defaultAdmin);
       await db.users.add(defaultAdmin);
       return true;
     }

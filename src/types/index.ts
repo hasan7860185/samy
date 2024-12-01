@@ -18,6 +18,7 @@ export interface User {
   lastActive: string;
   lastLogin?: string;
   createdAt: string;
+  updatedAt: string;
   theme: 'light' | 'dark';
   language: 'ar' | 'en';
   notifications: {
@@ -31,7 +32,6 @@ export interface User {
     rating: number;
     lastUpdated: string;
   };
-  updatedAt: string;
 }
 
 export type TranslationKey =

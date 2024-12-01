@@ -33,7 +33,6 @@ class AppDatabase extends Dexie {
       if (!dbExists) {
         console.log('Initializing new database...');
         
-        // Create default admin user with updatedAt field
         const defaultAdmin: UserProfile = {
           id: '1',
           username: 'admin',
@@ -69,6 +68,14 @@ class AppDatabase extends Dexie {
       console.error('Failed to initialize database:', error);
       throw error;
     }
+  }
+
+  async validateUser(username: string, password: string) {
+    const user = await this.users.where('username').equals(username).first();
+    if (user && user.password === password) {
+      return user;
+    }
+    return null;
   }
 }
 
