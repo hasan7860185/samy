@@ -1,0 +1,68 @@
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-family-ar: 'Cairo', sans-serif;
+  --font-family-en: 'Inter', sans-serif;
+}
+
+/* RTL Specific Styles */
+.rtl {
+  direction: rtl;
+  font-family: var(--font-family-ar);
+}
+
+.rtl .ltr-text {
+  direction: ltr;
+  text-align: left;
+}
+
+/* LTR Specific Styles */
+.ltr {
+  direction: ltr;
+  font-family: var(--font-family-en);
+}
+
+.ltr .rtl-text {
+  direction: rtl;
+  text-align: right;
+}
+
+/* Language-specific spacing */
+.rtl .space-x-reverse > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 1;
+}
+
+.ltr .space-x-reverse > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 0;
+}
+
+/* Language-specific margins */
+.rtl .mr-auto {
+  margin-right: auto;
+  margin-left: 0;
+}
+
+.ltr .mr-auto {
+  margin-right: 0;
+  margin-left: auto;
+}
+
+/* Language-specific positioning */
+.rtl .right-0 {
+  right: 0;
+}
+
+.ltr .right-0 {
+  right: auto;
+  left: 0;
+}
+
+/* Transitions */
+.direction-transition {
+  transition: all 0.3s ease-in-out;
+}
