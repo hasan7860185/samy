@@ -21,7 +21,13 @@ export type TranslationKey =
   | 'new'
   | 'not_responded'
   | 'appointment_set'
-  | 'post_meeting';
+  | 'post_meeting'
+  | 'totalClients'
+  | 'activeProperties'
+  | 'tasks'
+  | 'properties'
+  | 'addProperty'
+  | 'editProperty';
 
 export const translations: Record<TranslationKey, { ar: string; en: string }> = {
   light: {
@@ -115,5 +121,29 @@ export const translations: Record<TranslationKey, { ar: string; en: string }> = 
   post_meeting: {
     ar: 'بعد الاجتماع',
     en: 'Post Meeting'
+  },
+  totalClients: {
+    ar: 'إجمالي العملاء',
+    en: 'Total Clients'
+  },
+  activeProperties: {
+    ar: 'العقارات النشطة',
+    en: 'Active Properties'
+  },
+  tasks: {
+    ar: 'المهام',
+    en: 'Tasks'
+  },
+  properties: {
+    ar: 'العقارات',
+    en: 'Properties'
+  },
+  addProperty: {
+    ar: 'إضافة عقار',
+    en: 'Add Property'
+  },
+  editProperty: {
+    ar: 'تعديل العقار',
+    en: 'Edit Property'
   }
 };

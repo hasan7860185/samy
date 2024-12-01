@@ -66,12 +66,80 @@ export interface Task {
   status: TaskStatus;
   priority: TaskPriority;
   assignedTo: string;
+  assignedToEn: string;
   createdAt: string;
   updatedAt: string;
 }
 
 export type TaskStatus = 'pending' | 'in_progress' | 'completed';
 export type TaskPriority = 'low' | 'medium' | 'high';
+
+export interface Developer {
+  id: string;
+  name: string;
+  nameEn: string;
+  description: string;
+  descriptionEn: string;
+  email: string;
+  phone: string;
+  address: string;
+  website?: string;
+  status: 'active' | 'inactive';
+  createdAt: string;
+  updatedAt: string;
+  logo?: string;
+  language?: Language;
+}
+
+export interface Project {
+  id: string;
+  developerId: string;
+  name: string;
+  nameEn: string;
+  description: string;
+  descriptionEn: string;
+  location: {
+    city: string;
+    cityEn: string;
+    district: string;
+    districtEn: string;
+    coordinates?: {
+      lat: number;
+      lng: number;
+    }
+  };
+  type: ProjectType;
+  status: ProjectStatus;
+  startDate: string;
+  completionDate: string;
+  totalUnits: number;
+  price: {
+    min: number;
+    max: number;
+    currency: string;
+  };
+  features: string[];
+  featuresEn: string[];
+  media: {
+    images: string[];
+    videos: string[];
+    brochure?: string;
+  };
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type ProjectType = 
+  | 'residential'
+  | 'commercial'
+  | 'mixed_use'
+  | 'industrial';
+
+export type ProjectStatus = 
+  | 'planned'
+  | 'under_construction'
+  | 'completed'
+  | 'sold_out';
 
 export interface Property {
   id: string;

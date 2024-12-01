@@ -1,12 +1,9 @@
 import Dexie from 'dexie';
 import bcrypt from 'bcryptjs';
-import { UserProfile } from '../../types/user';
-import { Client } from '../../types';
+import { UserProfile, Client, Property, Task } from '../../types';
+import { UserAction } from '../../types/user';
 import { Developer } from '../../types/developer';
 import { Project } from '../../types/project';
-import { Property } from '../../types/property';
-import { Task } from '../../types';
-import { UserAction } from '../../types/user';
 import { syncService } from '../sync/core';
 import { supabase } from '../supabase/client';
 
