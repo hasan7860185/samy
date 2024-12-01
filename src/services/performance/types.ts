@@ -1,4 +1,3 @@
-```typescript
 export interface UserAction {
   id: string;
   userId: string;
@@ -10,13 +9,13 @@ export interface UserAction {
 }
 
 export type UserActionType = 
-  | 'client_contact'        // Called/messaged client
-  | 'client_meeting'        // Met with client
-  | 'property_showing'      // Showed property to client
-  | 'deal_negotiation'      // Negotiated deal terms
-  | 'deal_closed'          // Closed a deal
-  | 'follow_up'           // Followed up with client
-  | 'document_processing'; // Processed client documents
+  | 'client_contact'
+  | 'client_meeting'
+  | 'property_showing'
+  | 'deal_negotiation'
+  | 'deal_closed'
+  | 'follow_up'
+  | 'document_processing';
 
 export interface UserPerformance {
   userId: string;
@@ -30,8 +29,7 @@ export interface UserPerformance {
     followUps: number;
     documents: number;
   };
-  rating: number; // 1-5 stars
+  rating: number;
   startDate: string;
   endDate: string;
 }
-```

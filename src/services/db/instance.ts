@@ -6,7 +6,7 @@ import { Developer } from '../../types/developer';
 import { Project } from '../../types/project';
 import { Property } from '../../types/property';
 import { Task } from '../../types';
-import { UserAction } from '../performance/types';
+import { UserAction } from '../../types/user';
 import { syncService } from '../sync/core';
 import { supabase } from '../supabase/client';
 

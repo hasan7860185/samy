@@ -21,4 +21,35 @@ export interface UserProfile {
     mobile: boolean;
   };
   avatar?: string;
+  performance?: {
+    actions: number;
+    rating: number;
+    lastUpdated: string;
+  };
+  createdAt?: string;
+}
+
+export interface UserAction {
+  id: string;
+  userId: string;
+  type: string;
+  timestamp: string;
+  details?: Record<string, any>;
+}
+
+export interface UserPerformance {
+  userId: string;
+  period: 'daily' | 'weekly' | 'monthly';
+  metrics: {
+    totalActions: number;
+    clientContacts: number;
+    meetings: number;
+    showings: number;
+    closedDeals: number;
+    followUps: number;
+    documents: number;
+  };
+  rating: number;
+  startDate: string;
+  endDate: string;
 }

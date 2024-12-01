@@ -6,6 +6,8 @@ export interface Client {
   facebookId?: string;
   status: ClientStatus;
   notes?: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export type ClientStatus =
@@ -22,38 +24,19 @@ export type ClientStatus =
   | 'postponed'
   | 'resale';
 
-export type UserRole = 'admin' | 'employee' | 'sales_manager';
-
-export interface User {
-  id: string;
-  username: string;
-  email: string;
-  fullName: string;
-  role: UserRole;
-  avatar?: string;
-  phone?: string;
-  department?: string;
-  createdAt: string;
-  lastLogin?: string;
-}
-
-export interface Property {
-  id: string;
-  title: string;
-  location: string;
-  price: number;
-  type: string;
-  description: string;
-  images: string[];
-}
-
 export interface Task {
   id: string;
   title: string;
+  titleEn: string;
   description: string;
+  descriptionEn: string;
   dueDate: string;
   status: 'pending' | 'in_progress' | 'completed';
   priority: 'low' | 'medium' | 'high';
+  assignedTo: string;
+  assignedToEn: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface Notification {

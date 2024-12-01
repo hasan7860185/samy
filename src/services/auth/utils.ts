@@ -1,28 +1,17 @@
-import * as bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import { UserProfile } from '../../types/user';
 
-export async function hashPassword(password: string): Promise<string> {
-  const salt = await bcrypt.genSalt(10);
-  return bcrypt.hash(password, salt);
-}
+export const generateToken = (user: UserProfile): string => {
+  const secret = process.env.JWT_SECRET || 'default-secret-key';
+  return jwt.sign(
+    { 
+      id: user.id,
+      username: user.username,
+      role: user.role 
+    },
+    secret,
+    { expiresIn: '24h' }
+  );
+};
 
-export async function comparePasswords(password: string, hash: string): Promise<boolean> {
-  return bcrypt.compare(password, hash);
-}
-
-export function generateToken(): string {
-  return `${Math.random().toString(36).substring(2)}${Date.now().toString(36)}`;
-}
-
-export function validateCredentials(username: string, password: string): void {
-  if (!username || !password) {
-    throw new Error('يرجى إدخال اسم المستخدم وكلمة المرور');
-  }
-  
-  if (username.length < 3) {
-    throw new Error('اسم المستخدم يجب أن يكون 3 أحرف على الأقل');
-  }
-  
-  if (password.length < 6) {
-    throw new Error('كلمة المرور يجب أن تكون 6 أحرف على الأقل');
-  }
-}
+export { generateToken as generateAuthToken };
